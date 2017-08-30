@@ -7,7 +7,8 @@ const schema = new mongoose.Schema({
     type: String
   },
   type: {
-    type: String
+    type: String,
+    default: 'FILE'
   },
   parentID: {
     type: String
