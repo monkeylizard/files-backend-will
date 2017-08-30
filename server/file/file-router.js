@@ -20,5 +20,6 @@ const uploader = multer({
 // uploader middleware to actually save a record of this file in Mongo
 router.use('/', uploader.single('file'))
 router.post('/', require('./handlers/create.js'))
+router.get('/', require('./handlers/find.js'))
 
 module.exports = router

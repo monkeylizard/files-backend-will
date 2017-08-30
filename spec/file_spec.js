@@ -80,7 +80,7 @@ describe('Files', () => {
     })
   })
 
-  describe('Find', () => {
+  describe('Find by id', () => {
     beforeEach(() => {
       this.findById = require('../server/file/query/find-by-id.js')(this.model)
 
@@ -108,6 +108,39 @@ describe('Files', () => {
 
     it('gets the lean version of the model', () => {
       this.findById('abc123')
+
+      expect(this.query.lean).toHaveBeenCalled()
+    })
+  })
+
+  describe('Find by project id', () => {
+    beforeEach(() => {
+      this.findByProject = require('../server/file/query/find-by-project.js')(this.model)
+
+      this.query = {
+        lean: jasmine.createSpy('lean'),
+      }
+
+      this.leanQuery = {
+        exec: jasmine.createSpy('exec')
+      }
+
+      spyOn(this.model, 'find').and.returnValue(this.query)
+      this.query.lean.and.returnValue(this.leanQuery)
+      this.leanQuery.exec.and.returnValue(expectedData)
+    })
+
+    it('can find all files with a given project id', () => {
+      expect(this.findByProject('myProject')).toEqual(expectedData)
+    })
+
+    it('finds the specified files', () => {
+      this.findByProject('myProject')
+      expect(this.model.find).toHaveBeenCalledWith({ projectId: 'myProject' })
+    })
+
+    it('gets the lean version of the model', () => {
+      this.findByProject('myProject')
 
       expect(this.query.lean).toHaveBeenCalled()
     })
