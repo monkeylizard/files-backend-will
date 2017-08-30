@@ -18,6 +18,7 @@ const uploader = multer({
 
 // This should upload the file, however, you'll still need to add another function after this
 // uploader middleware to actually save a record of this file in Mongo
-router.post('/', uploader.single('file'))
+router.use('/', uploader.single('file'))
+router.post('/', require('./handlers/create.js'))
 
 module.exports = router
