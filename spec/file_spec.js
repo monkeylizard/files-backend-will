@@ -65,16 +65,16 @@ describe('Files', () => {
       spyOn(this.model, 'create').and.returnValue(this.model)
       spyOn(this.model, 'call').and.returnValue(expectedData)
 
-      const createFile = require('../server/file/command/create-one.js')
+      const createFile = require('../server/file/command/create-one.js')(this.model)
 
-      expect(createFile(this.model, demoData)).toEqual(expectedData)
+      expect(createFile(demoData)).toEqual(expectedData)
       expect(this.model.call).toHaveBeenCalledWith('toObject')
     })
   })
 
   describe('Find', () => {
     beforeEach(() => {
-      this.findById = require('../server/file/query/find-by-id.js')
+      this.findById = require('../server/file/query/find-by-id.js')(this.model)
 
       this.query = {
         lean: jasmine.createSpy('lean'),
@@ -90,16 +90,16 @@ describe('Files', () => {
     })
 
     it('can find a file by id', () => {
-      expect(this.findById(this.model, 'abc123')).toEqual(expectedData)
+      expect(this.findById('abc123')).toEqual(expectedData)
     })
 
     it('finds the specified file', () => {
-      this.findById(this.model, 'abc123')
+      this.findById('abc123')
       expect(this.model.findOne).toHaveBeenCalledWith({ _id: 'abc123' })
     })
 
     it('gets the lean version of the model', () => {
-      this.findById(this.model, 'abc123')
+      this.findById('abc123')
 
       expect(this.query.lean).toHaveBeenCalled()
     })

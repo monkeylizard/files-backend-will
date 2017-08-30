@@ -1,7 +1,9 @@
 'use strict'
 
-module.exports = (model, data) => {
-  return model
-    .create(data)
-    .call('toObject')
+module.exports = (model) => {
+  return (data) => {
+    return model
+      .create(data)
+      .call('toObject')
+  }
 }
