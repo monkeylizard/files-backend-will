@@ -8,6 +8,16 @@ const demoData = {
   location: 'myBucketKey'
 }
 
+const expectedData = {
+  name: 'will.txt',
+  type: 'FILE',
+  parentID: 'abc123',
+  projectID: 'myProject',
+  size: 10000,
+  location: 'myBucketKey',
+  createdAt: this.now
+}
+
 describe('Files', () => {
   beforeAll(() => {
     this.now = Date.now()
@@ -53,22 +63,45 @@ describe('Files', () => {
   describe('Creation', () => {
     it('can create a file', () => {
       spyOn(this.model, 'create').and.returnValue(this.model)
-
-      const expectedData = {
-        name: 'will.txt',
-        type: 'FILE',
-        parentID: 'abc123',
-        projectID: 'myProject',
-        size: 10000,
-        location: 'myBucketKey',
-        createdAt: this.now
-      }
       spyOn(this.model, 'call').and.returnValue(expectedData)
 
       const createFile = require('../server/file/command/create-one.js')
 
       expect(createFile(this.model, demoData)).toEqual(expectedData)
       expect(this.model.call).toHaveBeenCalledWith('toObject')
+    })
+  })
+
+  describe('Find', () => {
+    beforeEach(() => {
+      this.findById = require('../server/file/query/find-by-id.js')
+
+      this.query = {
+        lean: jasmine.createSpy('lean'),
+      }
+
+      this.leanQuery = {
+        exec: jasmine.createSpy('exec')
+      }
+
+      spyOn(this.model, 'findOne').and.returnValue(this.query)
+      this.query.lean.and.returnValue(this.leanQuery)
+      this.leanQuery.exec.and.returnValue(expectedData)
+    })
+
+    it('can find a file by id', () => {
+      expect(this.findById(this.model, 'abc123')).toEqual(expectedData)
+    })
+
+    it('finds the specified file', () => {
+      this.findById(this.model, 'abc123')
+      expect(this.model.findOne).toHaveBeenCalledWith({ _id: 'abc123' })
+    })
+
+    it('gets the lean version of the model', () => {
+      this.findById(this.model, 'abc123')
+
+      expect(this.query.lean).toHaveBeenCalled()
     })
   })
 })
