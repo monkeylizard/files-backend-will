@@ -2,7 +2,8 @@
   "name": "be-onsite",
   "version": "1.0.0",
   "scripts": {
-    "start": "nodemon --ignore client/ ./server"
+    "start": "nodemon --ignore client/ --ignore spec/ ./server",
+    "test": "jasmine"
   },
   "dependencies": {
     "aws-sdk": "^2.7.21",
@@ -29,6 +30,7 @@
     "babel-eslint": "~6.1.0",
     "eslint": "~2.11.0",
     "eslint-plugin-react": "~5.1.0",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "jasmine": "~2.8.0"
   }
 }
