@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const demoData = { 
   name: 'will.txt',
-  type: 'FILE',
   parentID: 'abc123',
   projectID: 'myProject',
   size: 10000,
@@ -67,8 +66,17 @@ describe('Files', () => {
 
       const createFile = require('../server/file/command/create-one.js')(this.model)
 
-      expect(createFile(demoData)).toEqual(expectedData)
+      const data = {
+        originalname: 'will.txt',
+        parentID: 'abc123',
+        projectID: 'myProject',
+        size: 10000,
+        location: 'myBucketKey'
+      }
+
+      expect(createFile(data)).toEqual(expectedData)
       expect(this.model.call).toHaveBeenCalledWith('toObject')
+      expect(this.model.create.calls.mostRecent().args[0].name).toEqual('will.txt')
     })
   })
 
