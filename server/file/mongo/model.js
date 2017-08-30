@@ -10,10 +10,10 @@ const schema = new mongoose.Schema({
     type: String,
     default: 'FILE'
   },
-  parentID: {
+  parentId: {
     type: String
   },
-  projectID: {
+  projectId: {
     type: String
   },
   size: {

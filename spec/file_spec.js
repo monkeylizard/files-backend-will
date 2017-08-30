@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const demoData = { 
   name: 'will.txt',
-  parentID: 'abc123',
-  projectID: 'myProject',
+  parentId: 'abc123',
+  projectId: 'myProject',
   size: 10000,
   location: 'myBucketKey'
 }
@@ -10,8 +10,8 @@ const demoData = {
 const expectedData = {
   name: 'will.txt',
   type: 'FILE',
-  parentID: 'abc123',
-  projectID: 'myProject',
+  parentId: 'abc123',
+  projectId: 'myProject',
   size: 10000,
   location: 'myBucketKey',
   createdAt: this.now
@@ -39,11 +39,11 @@ describe('Files', () => {
     })
 
     it('has a parent id', () => {
-      expect(this.demoFile().parentID).toEqual('abc123')
+      expect(this.demoFile().parentId).toEqual('abc123')
     })
 
     it('has a project id', () => {
-      expect(this.demoFile().projectID).toEqual('myProject')
+      expect(this.demoFile().projectId).toEqual('myProject')
     })
 
     it('has a size', () => {
