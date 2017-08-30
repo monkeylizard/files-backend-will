@@ -13,7 +13,7 @@ describe('File create handler', () => {
     this.findById = jasmine.createSpy('find by id')
       .and.returnValue(Promise.resolve(this.expectedData))
 
-    this.request = { body: 'some body' }
+    this.request = { file: 'some body' }
     this.response = { json: jasmine.createSpy('render json').and.returnValue(true) }
     this.next = jasmine.createSpy('next')
 
