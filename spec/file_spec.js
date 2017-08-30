@@ -1,25 +1,26 @@
 const mongoose = require('mongoose')
+const demoData = { 
+  name: 'will.txt',
+  type: 'FILE',
+  parentID: 'abc123',
+  projectID: 'myProject',
+  size: 10000,
+  location: 'myBucketKey'
+}
 
 describe('Files', () => {
+  beforeAll(() => {
+    this.now = Date.now()
+    spyOn(Date, 'now').and.returnValue(this.now)
+
+    this.model = require('../server/file/mongo/model')
+
+    this.demoFile = () => {
+      return this.model(demoData)
+    }
+  })
+
   describe('Schema', () => {
-
-    beforeAll(() => {
-      this.now = Date.now()
-      spyOn(Date, 'now').and.returnValue(this.now)
-      const schema = require('../server/file/mongo/model.js')
-
-      this.demoFile = () => {
-        return schema({ 
-          name: 'will.txt',
-          type: 'FILE',
-          parentID: 'abc123',
-          projectID: 'myProject',
-          size: 10000,
-          location: 'myBucketKey'
-        })
-      }
-    })
-
     it('has a file name', () => {
       expect(this.demoFile().name).toEqual('will.txt')
     })
@@ -48,5 +49,26 @@ describe('Files', () => {
       expect(Number(this.demoFile().dateModified)).toEqual(this.now)
     })
   })
-})
 
+  describe('Creation', () => {
+    it('can create a file', () => {
+      spyOn(this.model, 'create').and.returnValue(this.model)
+
+      const expectedData = {
+        name: 'will.txt',
+        type: 'FILE',
+        parentID: 'abc123',
+        projectID: 'myProject',
+        size: 10000,
+        location: 'myBucketKey',
+        createdAt: this.now
+      }
+      spyOn(this.model, 'call').and.returnValue(expectedData)
+
+      const createFile = require('../server/file/command/create-one.js')
+
+      expect(createFile(this.model, demoData)).toEqual(expectedData)
+      expect(this.model.call).toHaveBeenCalledWith('toObject')
+    })
+  })
+})
